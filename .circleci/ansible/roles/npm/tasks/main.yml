@@ -1,13 +1,9 @@
-- name: Confingure-Server
+- name: Install NPM
   apt:
     update_cache: true
     name: 
       - python3
       - nodejs
       - npm
-  npm:
-    name: 
-      - pm2
-    global: yes
   
 
