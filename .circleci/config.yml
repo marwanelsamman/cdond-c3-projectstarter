@@ -175,7 +175,7 @@ jobs:
       - run:
           name: Install Ansible
           command: |
-            yum install -y ansible
+            yum install -y ansible2
       - attach_workspace:
           at: ~/
       - run:
