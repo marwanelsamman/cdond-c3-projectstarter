@@ -3,7 +3,7 @@
     update_cache: true
     name: 
       - python3
-      - nodjs
+      - nodejs
       - npm
     state: present
 
