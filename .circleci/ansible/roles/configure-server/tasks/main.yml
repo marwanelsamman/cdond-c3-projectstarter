@@ -1,0 +1,9 @@
+- name: Confingure-Server
+  apt:
+    update_cache: true
+    name: 
+      - python3
+      - nodjs
+      - npm
+    state: present
+
