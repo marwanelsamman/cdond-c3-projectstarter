@@ -168,8 +168,6 @@ jobs:
       - add_ssh_keys:
           fingerprints:
             - $MY_FINGERPRINT
-      - attach_workspace:
-          at: ~/
       - run:
           name: Install dependencies
           command: |
@@ -178,6 +176,8 @@ jobs:
           name: Install Ansible
           command: |
             yum install -y ansible
+      - attach_workspace:
+          at: ~/
       - run:
           name: Configure server
           command: |
