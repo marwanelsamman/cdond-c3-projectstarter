@@ -208,9 +208,7 @@ jobs:
             then
               curl --insecure https://kvdb.io/HvDWxuX6Kuz5yUQjRQYfTP/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
-      - save_cache:
-          paths: [backend]
-          key: backend
+            exit 1
       - revert-migrations:
           workflowid: "${CIRCLE_WORKFLOW_ID:0:7}"   
 
