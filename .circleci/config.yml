@@ -198,7 +198,6 @@ jobs:
           name: Run migrations
           command: |
             cd backend
-            npm install
             npm init
             npm run build
             # Run and save the migration output
