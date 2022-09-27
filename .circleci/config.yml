@@ -245,6 +245,7 @@ jobs:
       - run:
           name: Install NPM
           command: |
+            curl -sL https://rpm.nodesource.com/setup_13.x | bash -
             yum install npm -y
       - run:
           name: Get backend url
