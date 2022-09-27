@@ -240,8 +240,8 @@ jobs:
       - run:
           name: Install NodeJS and NPM
           command: |
-            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
-            . ~/project/backend/nvm.sh
+            curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | NVM_DIR="~/project/backend"
+            . ~/.nvm/nvm.sh
             nvm install --lts
             npm -v
       - run:
