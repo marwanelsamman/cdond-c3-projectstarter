@@ -1,0 +1,4 @@
+- name: Commands to be executed
+  command: npm install
+  command: pm2 stop default
+  command: pm2 start npm -- start
