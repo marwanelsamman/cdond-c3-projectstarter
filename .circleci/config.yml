@@ -240,12 +240,16 @@ jobs:
       - run:
           name: Install NodeJS and NPM
           command: |
+            echo $0
             ls -a
+            cd .. 
+            ls -a
+            cd ..
+            ls -a
+            echo $0
             curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
             . ~/.nvm/nvm.sh
-            ls -a
             nvm install --lts
-            ls -a
             npm -v
       - run:
           name: Get backend url
