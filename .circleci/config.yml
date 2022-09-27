@@ -241,7 +241,7 @@ jobs:
           name: Install NodeJS and NPM
           command: |
             curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
-            . ~/.nvm/nvm.sh
+            . ~/project/backend/nvm.sh
             nvm install --lts
             npm -v
       - run:
@@ -255,8 +255,8 @@ jobs:
       - run:
           name: Deploy frontend objects
           command: |
-            npm run build
             cd frontend
+            npm run build
             npm install
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
