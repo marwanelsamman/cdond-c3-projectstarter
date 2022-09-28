@@ -325,6 +325,7 @@ jobs:
           command: |
             export BACKEND_IP=$(aws cloudformation describe-stacks --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7} --query "Stacks[0].Outputs[0].OutputValue" --output text)
             export API_URL="http://${BACKEND_IP}:3030"
+            # test Connection
             if curl "${API_URL}/api/status" | grep "ok"
             then
               return 0
