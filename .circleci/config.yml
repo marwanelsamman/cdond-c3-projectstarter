@@ -12,6 +12,7 @@ commands:
           name: Destroy environments
           when: on_fail
           command: |
+            aws s3 rm s3://udapeople-<<parameters.workflowid>> --recursive
             aws cloudformation delete-stack --stack-name udapeople-backend-<<parameters.workflowid>>
             aws cloudformation delete-stack --stack-name udapeople-frontend-<<parameters.workflowid>>
 
@@ -294,14 +295,58 @@ jobs:
             # Zip the directory
             tar -C backend -czvf artifact.tar.gz .
             cd .circleci/ansible
-            echo "$(<inventory.txt )"
-            cat inventory.txt
+            echo -e "Contents  of the inventory.txt file is: \n $(<inventory.txt )"
             ansible-playbook -i inventory.txt deploy-backend.yml
       - revert-migrations:
           workflowid: "${CIRCLE_WORKFLOW_ID:0:7}"
       - destroy-environment:
           workflowid: "${CIRCLE_WORKFLOW_ID:0:7}"  
 
+  smoke-test:
+    docker:
+      - image: alpine:latest
+    steps:
+      - checkout
+      - run:
+          name: Install tar and curl
+          command: |
+            apk update --no-cache
+            apk add --no-cache tar curl
+      - run:
+          name: Install aws-cli
+          command: |
+            apk add --no-cache aws-cli
+      - run:
+          name: Install NodeJS and NPM
+          command: |
+            apk add --update nodejs npm
+      - run:
+          name: Backend smoke test.
+          command: |
+            export BACKEND_IP=$(aws cloudformation describe-stacks --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7} --query "Stacks[0].Outputs[0].OutputValue" --output text)
+            export API_URL="http://${BACKEND_IP}:3030"
+            if curl "${API_URL}/api/status" | grep "ok"
+            then
+              return 0
+            else
+              return 1
+            fi
+      - run:
+          name: Frontend smoke test.
+          command: |
+              export URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-${AWS_DEFAULT_REGION}.amazonaws.com/#/employees"            
+              echo ${URL} 
+              if curl -s ${URL} | grep "Welcome"
+              then
+                  # Change this to 0 after the job fails
+                return 1
+              else
+                return 2
+              fi
+      - revert-migrations:
+          workflowid: "${CIRCLE_WORKFLOW_ID:0:7}"
+      - destroy-environment:
+          workflowid: "${CIRCLE_WORKFLOW_ID:0:7}"  
 
 workflows:
   default:
@@ -326,3 +371,5 @@ workflows:
           requires: [run-migrations]
       - deploy-backend:
           requires: [run-migrations]
+      - smoke-test:
+          requires: [deploy-backend, deploy-frontend] 
