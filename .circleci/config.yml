@@ -105,6 +105,11 @@ jobs:
             cd frontend
             npm install
             npm audit fix --audit-level=critical --force
+            npm install --save-dev webpack@5.74.0
+            npm update kind-of --depth 24
+            npm update acorn --depth 13
+            npm update js-yaml --depth 4
+            npm update ansi-regex --depth 7
             npm audit --audit-level=critical
 
   scan-backend:
@@ -122,6 +127,10 @@ jobs:
             npm update mkdirp --depth 6
             npm update path-parse --depth 3
             npm update kind-of --depth 14
+            npm install --save-dev jest@29.1.1
+            npm update kind-of --depth 23
+            npm update y18n --depth 4
+            npm update ansi-regex --depth 15
             npm audit --audit-level=critical
 
   deploy-infrastructure:
