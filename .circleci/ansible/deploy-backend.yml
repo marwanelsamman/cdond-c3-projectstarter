@@ -8,12 +8,26 @@
     - ansible_python_interpreter: /usr/bin/python3
     - ansible_host_key_checking: false
     - ansible_stdout_callback: yaml
-  
+
   pre_tasks:
-    - name: "Check npm is installed"
-      command: npm -v
-      command: npm install
-      command: pm2 stop default
-      command: pm2 start npm -- start
-  #roles:
-   # - deploy
+    - name: "Prepare the env"
+      shell: |
+        cd dist
+        echo NODE_ENV=production > .env
+        echo VERSION=1 >> .env
+        echo TYPEORM_CONNECTION=postgres >> .env
+        echo TYPEORM_MIGRATIONS_DIR=./migrations >> .env
+        echo 'TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}' >> .env
+        echo TYPEORM_MIGRATIONS=./migrations/*.ts >> .env
+        echo TYPEORM_HOST=$TYPEORM_HOST >> .env
+        echo TYPEORM_PORT=$TYPEORM_PORT >> .env
+        echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> .env
+        echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> .env
+        echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> .env
+        cat .env
+        cd ..
+        tar -cvf artifact.tar.gz dist/.env dist/* package*
+        cd ..
+
+  roles:
+    - deploy
