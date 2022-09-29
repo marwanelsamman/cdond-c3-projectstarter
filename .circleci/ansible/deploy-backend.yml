@@ -12,7 +12,7 @@
   pre_tasks:
     - name: "Copy backend deployment to EC2"
       copy:
-        src: ~/project/.circleci/backend/artifact.tar.gz
+        src: ~/project/backend/artifact.tar.gz
         dest: ~/udapeople/
         owner: ubuntu
         group: ubuntu
