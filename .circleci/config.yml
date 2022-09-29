@@ -300,9 +300,8 @@ jobs:
             cd ..
             # Zip the directory
             tar -C backend -czvf artifact.tar.gz .
-            cd .circleci/ansible
-            echo -e "Contents  of the inventory.txt file is: \n $(<inventory.txt )"
-            ansible-playbook -i inventory.txt deploy-backend.yml
+            echo -e "Contents  of the inventory.txt file is: \n $(<.circleci/ansible/inventory.txt )"
+            ansible-playbook -i inventory.txt .circleci/ansible/deploy-backend.yml
       - revert-migrations:
           workflowid: "${CIRCLE_WORKFLOW_ID:0:7}"
       - destroy-environment:
