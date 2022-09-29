@@ -17,10 +17,10 @@
         owner: ubuntu
         group: ubuntu
         mode: 0755
-    #- name: "Extract the tar file"
-      #shell: |
-        #cd ~/udapeople/
-        #tar -xf artifact.tar.gz
+    - name: "Extract the tar file"
+      shell: |
+        cd ~/udapeople/
+        tar -xf artifact.tar.gz
     #- name: "prepare env"
       #shell: |
         #echo NODE_ENV=production > .env
