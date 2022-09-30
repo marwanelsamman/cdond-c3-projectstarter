@@ -29,8 +29,6 @@ commands:
           command: |
             curl --insecure https://kvdb.io/${KVDB_BUCKET_ID}/migration_${CIRCLE_WORKFLOW_ID:0:7} -d "1"
             export SUCCESS="$(curl --insecure https://kvdb.io/${KVDB_BUCKET_ID}/migration_<<parameters.workflowid>>)"
-            echo $SUCCESS
-            curl --insecure https://kvdb.io/${KVDB_BUCKET_ID}/migration_<<parameters.workflowid>>
             if(( $SUCCESS == 1 ))
             then
               cd ~/project/backend
@@ -334,10 +332,11 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Install tar and curl
+          name: Install tar curl and bash
           command: |
             apk update --no-cache
             apk add --no-cache tar curl
+            apk add bash
       - run:
           name: Install aws-cli
           command: |
