@@ -344,6 +344,10 @@ jobs:
           command: |
             apk add --update nodejs npm
       - run:
+          name: Wait before testing the link
+          command: |
+            sleep 30
+      - run:
           name: Backend smoke test.
           command: |
             export BACKEND_IP=$(aws cloudformation describe-stacks --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7} --query "Stacks[0].Outputs[0].OutputValue" --output text)
@@ -362,7 +366,7 @@ jobs:
               echo ${URL} 
               if curl -s ${URL} | grep "Welcome"
               then
-                return 0
+                return 1
               else
                 return 1
               fi
