@@ -348,8 +348,6 @@ jobs:
           command: |
             export BACKEND_IP=$(aws cloudformation describe-stacks --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7} --query "Stacks[0].Outputs[0].OutputValue" --output text)
             export API_URL="http://${BACKEND_IP}:3030"
-            echo ${API_URL}
-            curl "${API_URL}/api/status"
             # test Connection
             if curl "${API_URL}/api/status" | grep "ok"
             then
@@ -364,15 +362,14 @@ jobs:
               echo ${URL} 
               if curl -s ${URL} | grep "Welcome"
               then
-                  # Change this to 0 after the job fails
-                return 1
+                return 0
               else
-                return 2
+                return 1
               fi
-      #- revert-migrations:
-          #workflowid: "${CIRCLE_WORKFLOW_ID:0:7}"
-      #- destroy-environment:
-          #workflowid: "${CIRCLE_WORKFLOW_ID:0:7}"  
+      - revert-migrations:
+          workflowid: "${CIRCLE_WORKFLOW_ID:0:7}"
+      - destroy-environment:
+          workflowid: "${CIRCLE_WORKFLOW_ID:0:7}"  
 
 workflows:
   default:
