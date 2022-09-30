@@ -28,7 +28,7 @@ commands:
           when: on_fail
           command: |
             #export SUCCESS="$(curl --insecure https://kvdb.io/${KVDB_BUCKET_ID}/migration_<<parameters.workflowid>>)"
-            export SUCCESS=("1")
+            export SUCCESS=1
             if(( $SUCCESS == 1 ))
               then
                 cd ~/project/backend
@@ -220,10 +220,10 @@ jobs:
             then
               curl --insecure https://kvdb.io/${KVDB_BUCKET_ID}/migration_${CIRCLE_WORKFLOW_ID:0:7} -d "1"
             fi
+      - destroy-environment:
+          workflowid: "${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations:
           workflowid: "${CIRCLE_WORKFLOW_ID:0:7}"
-      - destroy-environment:
-          workflowid: "${CIRCLE_WORKFLOW_ID:0:7}"  
 
   deploy-frontend:
     docker:
@@ -265,10 +265,10 @@ jobs:
             npm run build
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
+      - destroy-environment:
+          workflowid: "${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations:
           workflowid: "${CIRCLE_WORKFLOW_ID:0:7}"
-      - destroy-environment:
-          workflowid: "${CIRCLE_WORKFLOW_ID:0:7}"  
 
   deploy-backend:
     docker:
@@ -321,10 +321,10 @@ jobs:
             cd .circleci/ansible/
             echo -e "Contents  of the inventory.txt file is: \n $(<inventory.txt )"
             ansible-playbook -i inventory.txt deploy-backend.yml
-      - revert-migrations:
-          workflowid: "${CIRCLE_WORKFLOW_ID:0:7}"
       - destroy-environment:
-          workflowid: "${CIRCLE_WORKFLOW_ID:0:7}"  
+          workflowid: "${CIRCLE_WORKFLOW_ID:0:7}" 
+      - revert-migrations:
+          workflowid: "${CIRCLE_WORKFLOW_ID:0:7}" 
 
   smoke-test:
     docker:
@@ -371,10 +371,10 @@ jobs:
               else
                 return 1
               fi
+      - destroy-environment:
+          workflowid: "${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations:
           workflowid: "${CIRCLE_WORKFLOW_ID:0:7}"
-      - destroy-environment:
-          workflowid: "${CIRCLE_WORKFLOW_ID:0:7}"  
 
 workflows:
   default:
