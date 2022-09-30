@@ -329,15 +329,15 @@ jobs:
 
   smoke-test:
     docker:
-      - image: alpine:latest
+      - image: frolvlad/alpine-bash:latest
     steps:
       - checkout
       - run:
-          name: Install tar curl and bash
+          name: Install tar curl
           command: |
             apk update --no-cache
             apk add --no-cache tar curl
-            apk add bash
+            #apk add bash
       - run:
           name: Install aws-cli
           command: |
