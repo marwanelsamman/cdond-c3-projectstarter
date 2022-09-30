@@ -27,7 +27,6 @@ commands:
           name: Revert migrations
           when: on_fail
           command: |
-            /bin/bash
             curl --insecure https://kvdb.io/${KVDB_BUCKET_ID}/migration_${CIRCLE_WORKFLOW_ID:0:7} -d "1"
             export SUCCESS="$(curl --insecure https://kvdb.io/${KVDB_BUCKET_ID}/migration_<<parameters.workflowid>>)"
             if(( $SUCCESS == 1 ))
@@ -358,21 +357,21 @@ jobs:
             # test Connection
             if curl "${API_URL}/api/status" | grep "ok"
             then
-              return 0
+              exit 0
             else
-              return 1
+              exit 1
             fi
       - run:
           name: Frontend smoke test.
           command: |
-              export URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-${AWS_DEFAULT_REGION}.amazonaws.com/#/employees"            
-              echo ${URL} 
-              if curl -s ${URL} | grep "Welcome"
-              then
-                return 1
-              else
-                return 1
-              fi
+            export URL="http://udapeople-${CIRCLE_WORKFLOW_ID:0:7}.s3-website-${AWS_DEFAULT_REGION}.amazonaws.com/#/employees"            
+            echo ${URL} 
+            if curl -s ${URL} | grep "Welcome"
+            then
+              exit 1
+            else
+              exit 1
+            fi
       - destroy-environment:
           workflowid: "${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations:
@@ -393,6 +392,9 @@ workflows:
           requires: [build-backend]
       - deploy-infrastructure:
           requires: [test-frontend, test-backend, scan-frontend, scan-backend]
+          filters:
+            branches:
+              only: [master]
       - configure-infrastructure:
           requires: [deploy-infrastructure]
       - run-migrations:
