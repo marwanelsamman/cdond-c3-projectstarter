@@ -431,6 +431,8 @@ jobs:
               echo "----------------------Nothing Old to Delete----------------------------------"
             fi
 
+#test pipeline fail when commiting to a different branch not master
+
 workflows:
   default:
     jobs:
