@@ -51,9 +51,8 @@ commands:
             aws cloudformation deploy \
             --template-file .circleci/files/cloudfront.yml \
             --stack-name InitialStack \
-            --parameter-overrides WorkflowID="cc96d65" \
-            --tags project=udapeople \
-            --profile udapeople
+            --parameter-overrides WorkflowID="<<parameters.workflowid>>" \
+            --tags project=udapeople
 
             
 jobs:
