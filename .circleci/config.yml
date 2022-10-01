@@ -51,8 +51,9 @@ commands:
             aws cloudformation deploy \
             --template-file .circleci/files/cloudfront.yml \
             --stack-name InitialStack \
-            --parameter-overrides WorkflowID="<<parameters.workflowid>>" \
-            --tags project=udapeople
+            --parameter-overrides WorkflowID="cc96d65" \
+            --tags project=udapeople \
+            --profile udapeople
 
             
 jobs:
@@ -401,7 +402,7 @@ jobs:
       - run:
           name: Update cloudfront distribution
           command: |
-            export OldWorkflowID=$(aws cloudformation list-exports --query "Exports[?Name=='WorkflowID'].Value" --no-paginate --output text)
+            echo 'export OldWorkflowID=$(aws cloudformation list-exports --query "Exports[?Name=='WorkflowID'].Value" --no-paginate --output text)' >> $BASH_ENV
             curl --insecure https://kvdb.io/${KVDB_BUCKET_ID}/OldWorkflowID -d ${OldWorkflowID}
             aws cloudformation deploy \
             --template-file .circleci/files/cloudfront.yml \
