@@ -402,6 +402,8 @@ jobs:
           name: Update cloudfront distribution
           command: |
             echo "export OldWorkflowID=$(aws cloudformation list-exports --query Exports[?Name=='WorkflowID'].Value --no-paginate --output text)" >> $BASH_ENV
+            touch $BASH_ENV
+            echo ${OldWorkflowID}
             curl --insecure https://kvdb.io/${KVDB_BUCKET_ID}/OldWorkflowID -d ${OldWorkflowID}
             aws cloudformation deploy \
             --template-file .circleci/files/cloudfront.yml \
