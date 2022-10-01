@@ -36,6 +36,24 @@ commands:
               npm install
               npm run migrations:revert
             fi
+
+  revert-cloudfront-updates:
+    description: Revert Changes made to the cloudfront
+    parameters:
+      workflowid:
+        description: work flow id to be passed to the stack as a parameter
+        type: string
+    steps:
+      - run:
+          name: Revert Cloudfront Changes
+          when: on_fail
+          command: |
+            aws cloudformation deploy \
+            --template-file .circleci/files/cloudfront.yml \
+            --stack-name InitialStack \
+            --parameter-overrides WorkflowID="<<parameters.workflowid>>" \
+            --tags project=udapeople
+
             
 jobs:
   build-frontend:
@@ -392,10 +410,15 @@ jobs:
             --tags project=udapeople
             echo OldWorkflowID is : ${OldWorkflowID}
             echo CurrentWorkflowID is : ${CIRCLE_WORKFLOW_ID:0:7}
+            # Create Invalidation for the cloudfront to avoid cache issues
+            export CloudfrontDistributionID=$(aws cloudfront list-distributions --query "DistributionList.Items[0].Id" --output text)
+            aws cloudfront create-invalidation --distribution-id ${CloudfrontDistributionID} --paths "/*"  
       - destroy-environment:
           workflowid: "${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations:
           workflowid: "${CIRCLE_WORKFLOW_ID:0:7}"
+      - revert-cloudfront-updates:
+          workflowid: "${OldWorkflowID}"
 
   cleanup:
     docker:
