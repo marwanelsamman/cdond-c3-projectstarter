@@ -37,3 +37,4 @@
   roles:
     - npm
     - pm2
+    - configure-prometheus-node-exporter
