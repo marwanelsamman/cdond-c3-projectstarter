@@ -258,12 +258,10 @@ jobs:
       - run:
           name: Get backend url
           command: |
-            ls -a frontend
             export BACKEND_IP=$(aws cloudformation describe-stacks --stack-name udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7} --query "Stacks[0].Outputs[0].OutputValue" --output text)
             export API_URL="http://${BACKEND_IP}:3030"
             echo "${API_URL}"
             echo API_URL="http://${BACKEND_IP}:3030" >> frontend/.env
-            ls -a frontend
             cat frontend/.env
       - run:
           name: Deploy frontend objects
