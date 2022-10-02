@@ -406,8 +406,7 @@ jobs:
             echo OldWorkflowID is : ${OldWorkflowID}
             echo CurrentWorkflowID is : ${CIRCLE_WORKFLOW_ID:0:7}
             # Create Invalidation to update cloudfront and avoid cache issues
-            export CloudfrontDistributionID=$(aws cloudfront list-distributions --query "DistributionList.Items[0].Id" --no-paginate --output text)
-            aws cloudfront create-invalidation --distribution-id ${CloudfrontDistributionID} --paths "/*"  
+            aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRIBUTION_ID} --paths "/*"  
       - destroy-environment:
           workflowid: "${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations:
